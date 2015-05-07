@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'date'
 require 'open-uri'
 
-require 'open-uri/cached'
+# require 'open-uri/cached'
 # require 'colorize'
 # require 'pry'
 # require 'csv'
