@@ -2,9 +2,9 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require 'pry'
+require 'scraped'
 require 'scraperwiki'
-require 'nokogiri'
-require 'open-uri'
 
 require 'open-uri/cached'
 OpenURI::Cache.cache_path = '.cache'
@@ -23,10 +23,10 @@ data = page.xpath('//tr[.//div[@class="PhotoMemb"]]').map do |mem|
   details = noko(member_page)
   info = {
     # I can't get the sibling-td version of this to work, so up and down again
-    name:         details.xpath('.//span[@class="label" and text()[contains(.,"Name")]]/ancestor::tr[1]/td[2]').text.strip.gsub(/\s+/, ' '),
-    post:         details.xpath('.//span[@class="label" and text()[contains(.,"Designation")]]/ancestor::tr[1]/td[2]').text.strip.gsub(/\s+/, ' '),
-    constituency: details.xpath('.//span[@class="labelDetails" and text()[contains(.,"Constituency")]]/ancestor::tr[1]/td[2]').text.strip.gsub(/\s+/, ' '),
-    party:        details.xpath('.//span[@class="labelDetails" and text()[contains(.,"Party")]]/ancestor::tr[1]/td[2]').text.strip.gsub(/\s+/, ' '),
+    name:         details.xpath('.//span[@class="label" and text()[contains(.,"Name")]]/ancestor::tr[1]/td[2]').text.tidy,
+    post:         details.xpath('.//span[@class="label" and text()[contains(.,"Designation")]]/ancestor::tr[1]/td[2]').text.tidy,
+    constituency: details.xpath('.//span[@class="labelDetails" and text()[contains(.,"Constituency")]]/ancestor::tr[1]/td[2]').text.tidy,
+    party:        details.xpath('.//span[@class="labelDetails" and text()[contains(.,"Party")]]/ancestor::tr[1]/td[2]').text.tidy,
     email:        details.css('a[href^=mailto]').text,
     # image from the root page
     image:        mem.css('img/@src').text,
@@ -36,4 +36,5 @@ data = page.xpath('//tr[.//div[@class="PhotoMemb"]]').map do |mem|
   info
 end
 
+# puts data
 ScraperWiki.save_sqlite([:name], data)
