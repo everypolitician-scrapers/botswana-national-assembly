@@ -14,7 +14,7 @@ def noko(url)
   Nokogiri::HTML(open(url).read)
 end
 
-ScraperWiki.sqliteexecute('DELETE FROM data') rescue nil
+ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
 
 BASE = 'http://www.parliament.gov.bw/component/member/'
 url = BASE + '?action=showAll&Itemid=110&limit=500'
